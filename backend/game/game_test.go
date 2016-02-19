@@ -3,7 +3,6 @@ package game
 import (
 	"testing"
 	. "github.com/franela/goblin"
-	"fmt"
 )
 
 func Test(t *testing.T) {
@@ -17,7 +16,6 @@ func Test(t *testing.T) {
 			game := CreateGame(&p1, &p2)
 
 			err := game.TakeTurn(Vertex{0, 0})
-			fmt.Println(game.actions)
 			g.Assert(err == nil).IsTrue("There was an error on the first move!")
 
 			err = game.TakeTurn(Vertex{0, 0})
