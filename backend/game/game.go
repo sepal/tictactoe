@@ -7,9 +7,10 @@ const (
 	STATE_FINISHED = "finished"
 )
 
-type game struct {
+type Game struct {
 	state   State
 	turn    int
 	players [2]*Player
 	current *Player
+	actions []Action
 }
