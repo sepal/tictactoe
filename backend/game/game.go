@@ -1,5 +1,10 @@
 package game
 
+import (
+	"math"
+	"errors"
+)
+
 type State string
 
 const (
@@ -10,7 +15,80 @@ const (
 type Game struct {
 	state   State
 	turn    int
-	players [2]*Player
+	players []*Player
 	current *Player
 	actions []Action
+	score   []int
+}
+
+func CreateGame(p1, p2 *Player) *Game {
+	players := make([]*Player, 2)
+	players[0] = p1
+	players[1] = p2
+
+	actions := make([]Action, 9)
+	score := make([]int, 8)
+	return &Game{STATE_RUNNING, 0, players, p1, actions, score}
+}
+
+func (g *Game) hasWon() bool {
+	for _, score := range g.score {
+		if math.Abs(float64(score)) == 3 {
+			return true
+		}
+	}
+	return false
+}
+
+func (g *Game) hasMove(position Vertex) bool {
+	for _, action := range g.actions {
+		if action.player != nil && action.position.equals(position) {
+			return true
+		}
+	}
+
+	return false
+}
+
+func (g *Game) TakeTurn(v Vertex) error {
+	if (g.state != STATE_RUNNING) {
+		return errors.New("Game has been finished.")
+	}
+
+	if g.hasMove(v) {
+		return errors.New("This move has been done.")
+	}
+
+	a := Action{g.current, v}
+	g.actions[g.turn] = a
+	g.turn++
+
+	points := 1
+	if g.current == g.players[1] {
+		points = -1
+	}
+
+	g.score[v.Y] += points
+	g.score[3 + v.X] += points
+
+	if v.X == v.Y {
+		g.score[6] += points
+	}
+
+	if 2 - v.X == v.Y {
+		g.score[7] += points
+	}
+
+	if g.hasWon() {
+		g.state = STATE_FINISHED
+		return nil
+	}
+
+	if g.current == g.players[0] {
+		g.current = g.players[1]
+	} else {
+		g.current = g.players[0]
+	}
+
+	return nil
 }
