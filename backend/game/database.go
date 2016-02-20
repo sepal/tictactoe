@@ -45,16 +45,25 @@ func DBClose() {
 }
 
 func CreateSchema() {
+	var err error
 	tables := []string{
 		"player",
 		"player_session",
 		"game",
 	}
 
+	// Create tables
 	for _, table := range tables {
-		_, err := r.TableCreate(table).RunWrite(session)
+		_, err = r.TableCreate(table).RunWrite(session)
 		if err != nil {
 			log.Fatalf("Error while creating table %v: %v", table, err.Error())
 		}
 	}
+
+	// Create indexes
+	_, err = r.Table("player").IndexCreate("Nickname").RunWrite(session)
+	if err != nil {
+		log.Fatalf("Error while creating index for player: %v", err.Error())
+	}
+
 }

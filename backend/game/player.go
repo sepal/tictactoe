@@ -33,10 +33,14 @@ func NicknameExists(nickname string) (bool, error) {
 }
 
 func LoadPlayer(nickname string) (*Player, error) {
-	res, err := r.Table("player").Filter(r.Row.Field("Nickname").Eq(nickname)).Run(session)
+	res, err := r.Table("player").GetAllByIndex("Nickname", nickname).Run(session)
 
 	if err != nil {
 		return nil, err
+	}
+
+	if res.IsNil() {
+		return nil, errors.New("Player does not exist")
 	}
 
 	var player Player

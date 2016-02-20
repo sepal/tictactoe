@@ -39,5 +39,24 @@ var _ = Describe("Player", func() {
 
 			Expect(err).ToNot(BeNil())
 		})
+
+		It("should be able to load a create user", func() {
+			p1, err := LoadPlayer("Player1")
+
+			Expect(err).To(BeNil())
+
+			Expect(p1.Id).To(Equal(p1.Id))
+		})
+
+		It("should be able to be deleted", func() {
+			p2, err := CreatePlayer("Player2")
+
+			Expect(err).To(BeNil())
+
+			p2.Delete()
+			p2, err = LoadPlayer("Player2")
+
+			Expect(err).ToNot(BeNil())
+		})
 	})
 })
