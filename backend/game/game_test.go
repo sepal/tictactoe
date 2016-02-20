@@ -29,7 +29,6 @@ var _ = Describe("Game", func() {
 			panic(err)
 		}
 
-
 		g = CreateGame(p1, p2)
 	})
 

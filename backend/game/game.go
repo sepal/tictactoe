@@ -28,6 +28,7 @@ func CreateGame(p1, p2 *Player) *Game {
 
 	actions := make([]Action, 9)
 	score := make([]int, 8)
+
 	return &Game{STATE_RUNNING, 0, players, p1, actions, score}
 }
 

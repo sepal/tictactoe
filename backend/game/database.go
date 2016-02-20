@@ -40,7 +40,7 @@ func InitDB(address, db string) {
 
 }
 
-func DBClose()  {
+func DBClose() {
 	session.Close()
 }
 
