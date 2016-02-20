@@ -29,17 +29,29 @@ var _ = Describe("Game", func() {
 			panic(err)
 		}
 
-		g = CreateGame(p1, p2)
+		g, err = CreateGame(p1, p2)
+
+		if err != nil {
+			panic(err)
+		}
 	})
 
 	AfterEach(func() {
 		p1.Delete()
 		p2.Delete()
 
+		g.Delete()
+
 		DBClose()
 	})
 
 	Describe("A new game", func() {
+		It("should not be added if there is another running game with the same users", func() {
+			g2, err := CreateGame(p2, p1)
+			Expect(err).ToNot(BeNil())
+			Expect(g2).To(BeNil())
+		})
+
 		It("should not allow the same move", func() {
 			err := g.TakeTurn(Vertex{0, 0})
 			Expect(err).To(BeNil())

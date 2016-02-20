@@ -44,7 +44,23 @@ func LoadPlayer(nickname string) (*Player, error) {
 	}
 
 	var player Player
+	res.One(&player)
 
+	return &player, nil
+}
+
+func LoadPlayerByID(id string) (*Player, error) {
+	res, err := r.Table("player").Get(id).Run(session)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if res.IsNil() {
+		return nil, errors.New("Player does not exist")
+	}
+
+	var player Player
 	res.One(&player)
 
 	return &player, nil
