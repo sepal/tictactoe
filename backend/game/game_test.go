@@ -12,10 +12,15 @@ var _ = Describe("Game", func() {
 	var g *Game
 
 	BeforeEach(func() {
-		p1 = CreatePlayer("Player1")
-		p2 = CreatePlayer("Player2")
+		p1, _ = CreatePlayer("Player1")
+		p2, _ = CreatePlayer("Player2")
 
 		g = CreateGame(p1, p2)
+	})
+
+	AfterEach(func() {
+		p1.Delete()
+		p2.Delete()
 	})
 
 	Describe("A new game", func() {
@@ -24,20 +29,19 @@ var _ = Describe("Game", func() {
 			Expect(err).To(BeNil())
 		})
 
-
 		It("should win on column", func() {
 			Expect(g.GetState()).To(Equal(STATE_RUNNING))
 
 			// p1 turn
-			g.TakeTurn(Vertex{0, 0});
+			g.TakeTurn(Vertex{0, 0})
 			// p2 turn
-			g.TakeTurn(Vertex{2, 0});
+			g.TakeTurn(Vertex{2, 0})
 			// p1 turn
-			g.TakeTurn(Vertex{0, 1});
+			g.TakeTurn(Vertex{0, 1})
 			// p2 turn
-			g.TakeTurn(Vertex{2, 1});
+			g.TakeTurn(Vertex{2, 1})
 			// p1 turn
-			g.TakeTurn(Vertex{0, 2});
+			g.TakeTurn(Vertex{0, 2})
 
 			Expect(g.GetState()).To(Equal(STATE_FINISHED))
 			Expect(g.GetCurrentPlayer()).To(Equal(p1))
@@ -45,22 +49,22 @@ var _ = Describe("Game", func() {
 
 		It("Should win on row", func() {
 			Expect(g.GetState()).To(Equal(STATE_RUNNING))
-			
+
 			// p1 turn
 			Expect(g.GetCurrentPlayer()).To(Equal(p1))
-			g.TakeTurn(Vertex{0, 0});
+			g.TakeTurn(Vertex{0, 0})
 			// p2 turn
 			Expect(g.GetCurrentPlayer()).To(Equal(p2))
-			g.TakeTurn(Vertex{1, 0});
+			g.TakeTurn(Vertex{1, 0})
 			// p1 turn
 			Expect(g.GetCurrentPlayer()).To(Equal(p1))
-			g.TakeTurn(Vertex{0, 1});
+			g.TakeTurn(Vertex{0, 1})
 			// p2 turn
 			Expect(g.GetCurrentPlayer()).To(Equal(p2))
-			g.TakeTurn(Vertex{1, 1});
+			g.TakeTurn(Vertex{1, 1})
 			// p1 turn
 			Expect(g.GetCurrentPlayer()).To(Equal(p1))
-			g.TakeTurn(Vertex{2, 0});
+			g.TakeTurn(Vertex{2, 0})
 			// p2 turn
 			Expect(g.GetCurrentPlayer()).To(Equal(p2))
 			g.TakeTurn(Vertex{1, 2})
@@ -69,22 +73,19 @@ var _ = Describe("Game", func() {
 			Expect(g.GetCurrentPlayer()).To(Equal(p2))
 		})
 
-
-
-
 		It("should win on diagonal", func() {
 			Expect(g.GetState()).To(Equal(STATE_RUNNING))
 
 			// P1 turn
-			g.TakeTurn(Vertex{1, 1});
+			g.TakeTurn(Vertex{1, 1})
 			// P2 turn
-			g.TakeTurn(Vertex{2, 1});
+			g.TakeTurn(Vertex{2, 1})
 			// P1 turn
-			g.TakeTurn(Vertex{0, 0});
+			g.TakeTurn(Vertex{0, 0})
 			// P2 turn
-			g.TakeTurn(Vertex{2, 0});
+			g.TakeTurn(Vertex{2, 0})
 			// P1 turn
-			g.TakeTurn(Vertex{2, 2});
+			g.TakeTurn(Vertex{2, 2})
 
 			Expect(g.GetState()).To(Equal(STATE_FINISHED))
 			Expect(g.GetCurrentPlayer()).To(Equal(p1))

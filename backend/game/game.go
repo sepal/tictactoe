@@ -1,14 +1,14 @@
 package game
 
 import (
-	"math"
 	"errors"
+	"math"
 )
 
 type State string
 
 const (
-	STATE_RUNNING State = "running"
+	STATE_RUNNING  State = "running"
 	STATE_FINISHED State = "finished"
 )
 
@@ -51,7 +51,7 @@ func (g *Game) hasMove(position Vertex) bool {
 }
 
 func (g *Game) TakeTurn(v Vertex) error {
-	if (g.state != STATE_RUNNING) {
+	if g.state != STATE_RUNNING {
 		return errors.New("Game has been finished.")
 	}
 
@@ -69,13 +69,13 @@ func (g *Game) TakeTurn(v Vertex) error {
 	}
 
 	g.score[v.Y] += points
-	g.score[3 + v.X] += points
+	g.score[3+v.X] += points
 
 	if v.X == v.Y {
 		g.score[6] += points
 	}
 
-	if 2 - v.X == v.Y {
+	if 2-v.X == v.Y {
 		g.score[7] += points
 	}
 
