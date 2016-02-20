@@ -5,6 +5,7 @@ import (
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"os"
 )
 
 var _ = Describe("Game", func() {
@@ -12,8 +13,22 @@ var _ = Describe("Game", func() {
 	var g *Game
 
 	BeforeEach(func() {
-		p1, _ = CreatePlayer("Player1")
-		p2, _ = CreatePlayer("Player2")
+		var err error
+
+		InitDB(os.Getenv("DB_HOST"), "tictactoe_test")
+
+		p1, err = CreatePlayer("Player1")
+
+		if err != nil {
+			panic(err)
+		}
+
+		p2, err = CreatePlayer("Player2")
+
+		if err != nil {
+			panic(err)
+		}
+
 
 		g = CreateGame(p1, p2)
 	})
@@ -21,6 +36,8 @@ var _ = Describe("Game", func() {
 	AfterEach(func() {
 		p1.Delete()
 		p2.Delete()
+
+		DBClose()
 	})
 
 	Describe("A new game", func() {

@@ -29,6 +29,8 @@ var _ = Describe("Player", func() {
 		if err != nil {
 			panic(err)
 		}
+
+		DBClose()
 	})
 
 	Describe("A player", func() {

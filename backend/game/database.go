@@ -40,6 +40,10 @@ func InitDB(address, db string) {
 
 }
 
+func DBClose()  {
+	session.Close()
+}
+
 func CreateSchema() {
 	tables := []string{
 		"player",
