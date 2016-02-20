@@ -9,7 +9,7 @@ type State string
 
 const (
 	STATE_RUNNING State = "running"
-	STATE_FINISHED = "finished"
+	STATE_FINISHED State = "finished"
 )
 
 type Game struct {
@@ -42,7 +42,7 @@ func (g *Game) hasWon() bool {
 
 func (g *Game) hasMove(position Vertex) bool {
 	for _, action := range g.actions {
-		if action.player != nil && action.position.equals(position) {
+		if action.player != nil && action.position.Equals(position) {
 			return true
 		}
 	}
@@ -91,4 +91,16 @@ func (g *Game) TakeTurn(v Vertex) error {
 	}
 
 	return nil
+}
+
+func (g *Game) GetState() State {
+	return g.state
+}
+
+func (g *Game) GetPlayers() []*Player {
+	return g.players
+}
+
+func (g *Game) GetCurrentPlayer() *Player {
+	return g.current
 }

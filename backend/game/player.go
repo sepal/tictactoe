@@ -16,3 +16,6 @@ type PlayerSession struct {
 	LastSeen    time.Time
 }
 
+func CreatePlayer(nickname string) *Player {
+	return &Player{0, nickname}
+}

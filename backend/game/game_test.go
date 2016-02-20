@@ -1,103 +1,93 @@
-package game
+package game_test
 
 import (
-	"testing"
-	. "github.com/franela/goblin"
+	. "github.com/sepal/tictactoe/backend/game"
+
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
 )
 
-func Test(t *testing.T) {
-	g := Goblin(t)
+var _ = Describe("Game", func() {
+	var p1, p2 *Player
+	var g *Game
 
-	g.Describe("Game", func() {
-		g.It("Should not allow same move", func() {
-			p1 := Player{0, "player1"}
-			p2 := Player{1, "player2"}
+	BeforeEach(func() {
+		p1 = CreatePlayer("Player1")
+		p2 = CreatePlayer("Player2")
 
-			game := CreateGame(&p1, &p2)
+		g = CreateGame(p1, p2)
+	})
 
-			err := game.TakeTurn(Vertex{0, 0})
-			g.Assert(err == nil).IsTrue("There was an error on the first move!")
-
-			err = game.TakeTurn(Vertex{0, 0})
-			g.Assert(err != nil).IsTrue("There was no error, although its the same move!")
+	Describe("A new game", func() {
+		It("should not allow the same move", func() {
+			err := g.TakeTurn(Vertex{0, 0})
+			Expect(err).To(BeNil())
 		})
 
-		g.It("Should win on column", func() {
-			p1 := Player{0, "player1"}
-			p2 := Player{1, "player2"}
 
-			game := CreateGame(&p1, &p2)
-
-			g.Assert(game.state == STATE_RUNNING).IsTrue("Game is not running!")
+		It("should win on column", func() {
+			Expect(g.GetState()).To(Equal(STATE_RUNNING))
 
 			// p1 turn
-			game.TakeTurn(Vertex{0, 0});
+			g.TakeTurn(Vertex{0, 0});
 			// p2 turn
-			game.TakeTurn(Vertex{2, 0});
+			g.TakeTurn(Vertex{2, 0});
 			// p1 turn
-			game.TakeTurn(Vertex{0, 1});
+			g.TakeTurn(Vertex{0, 1});
 			// p2 turn
-			game.TakeTurn(Vertex{2, 1});
+			g.TakeTurn(Vertex{2, 1});
 			// p1 turn
-			game.TakeTurn(Vertex{0, 2});
+			g.TakeTurn(Vertex{0, 2});
 
-			g.Assert(game.state == STATE_FINISHED).IsTrue("Game not finished!")
-			g.Assert(game.current == &p1).IsTrue("Player 1 has not won!")
+			Expect(g.GetState()).To(Equal(STATE_FINISHED))
+			Expect(g.GetCurrentPlayer()).To(Equal(p1))
 		})
 
-		g.It("Should win on row", func() {
-			p1 := Player{0, "player1"}
-			p2 := Player{1, "player2"}
-
-			game := CreateGame(&p1, &p2)
-
-			g.Assert(game.state == STATE_RUNNING).IsTrue("Game is not running!")
-
+		It("Should win on row", func() {
+			Expect(g.GetState()).To(Equal(STATE_RUNNING))
+			
 			// p1 turn
-			g.Assert(game.current == &p1).IsTrue("Its not player1's turn!")
-			game.TakeTurn(Vertex{0, 0});
+			Expect(g.GetCurrentPlayer()).To(Equal(p1))
+			g.TakeTurn(Vertex{0, 0});
 			// p2 turn
-			g.Assert(game.current == &p2).IsTrue("Its not player2's turn!")
-			game.TakeTurn(Vertex{1, 0});
+			Expect(g.GetCurrentPlayer()).To(Equal(p2))
+			g.TakeTurn(Vertex{1, 0});
 			// p1 turn
-			g.Assert(game.current == &p1).IsTrue("Its not player1's turn!")
-			game.TakeTurn(Vertex{0, 1});
+			Expect(g.GetCurrentPlayer()).To(Equal(p1))
+			g.TakeTurn(Vertex{0, 1});
 			// p2 turn
-			g.Assert(game.current == &p2).IsTrue("Its not player2's turn!")
-			game.TakeTurn(Vertex{1, 1});
+			Expect(g.GetCurrentPlayer()).To(Equal(p2))
+			g.TakeTurn(Vertex{1, 1});
 			// p1 turn
-			g.Assert(game.current == &p1).IsTrue("Its not player1's turn!")
-			game.TakeTurn(Vertex{2, 0});
+			Expect(g.GetCurrentPlayer()).To(Equal(p1))
+			g.TakeTurn(Vertex{2, 0});
 			// p2 turn
-			g.Assert(game.current == &p2).IsTrue("Its not player2's turn!")
-			game.TakeTurn(Vertex{1, 2})
+			Expect(g.GetCurrentPlayer()).To(Equal(p2))
+			g.TakeTurn(Vertex{1, 2})
 
-
-			g.Assert(game.state == STATE_FINISHED).IsTrue("Game not finished!")
-			g.Assert(game.current == &p2).IsTrue("Player 2 has not won!" + game.current.nickname)
+			Expect(g.GetState()).To(Equal(STATE_FINISHED))
+			Expect(g.GetCurrentPlayer()).To(Equal(p2))
 		})
 
-		g.It("Should win on diagonal", func() {
-			p1 := Player{0, "player1"}
-			p2 := Player{1, "player2"}
 
-			game := CreateGame(&p1, &p2)
 
-			g.Assert(game.state == STATE_RUNNING).IsTrue("Game is not running!")
 
-			// p1 turn
-			game.TakeTurn(Vertex{1, 1});
-			// p2 turn
-			game.TakeTurn(Vertex{2, 1});
-			// p1 turn
-			game.TakeTurn(Vertex{0, 0});
-			// p2 turn
-			game.TakeTurn(Vertex{2, 0});
-			// p1 turn
-			game.TakeTurn(Vertex{2, 2});
+		It("should win on diagonal", func() {
+			Expect(g.GetState()).To(Equal(STATE_RUNNING))
 
-			g.Assert(game.state == STATE_FINISHED).IsTrue("Game not finished!")
-			g.Assert(game.current == &p1).IsTrue("Player 1 has not won!")
+			// P1 turn
+			g.TakeTurn(Vertex{1, 1});
+			// P2 turn
+			g.TakeTurn(Vertex{2, 1});
+			// P1 turn
+			g.TakeTurn(Vertex{0, 0});
+			// P2 turn
+			g.TakeTurn(Vertex{2, 0});
+			// P1 turn
+			g.TakeTurn(Vertex{2, 2});
+
+			Expect(g.GetState()).To(Equal(STATE_FINISHED))
+			Expect(g.GetCurrentPlayer()).To(Equal(p1))
 		})
 	})
-}
+})
